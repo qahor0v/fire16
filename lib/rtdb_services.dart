@@ -10,10 +10,21 @@ class RealDbServices {
     await ref.set(user.toJson());
   }
 
+  ///Add
+  Future<void> update(User user) async {
+    DatabaseReference ref = database.ref('users/${user.id}');
+    await ref.update(user.toJson());
+  }
+
   ///Get
   Future get(String id) async {
     DatabaseReference ref = database.ref('users');
     final data = await ref.child('/$id').get();
     return data.value;
+  }
+
+  Future delete(String id) async {
+    DatabaseReference ref = database.ref('users');
+    await ref.child('/$id').remove();
   }
 }
