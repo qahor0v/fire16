@@ -1,4 +1,5 @@
 class UserModel {
+  String id;
   String name;
   String surname;
   String photoUrl;
@@ -8,6 +9,7 @@ class UserModel {
   String bio;
 
   UserModel({
+    required this.id,
     required this.name,
     required this.surname,
     required this.photoUrl,
@@ -17,7 +19,7 @@ class UserModel {
     required this.online,
   });
 
-  factory UserModel.fromJson(Map<String, dynamic> json) => UserModel(
+  factory UserModel.fromJson(dynamic json) => UserModel(
         name: json['name'] as String,
         surname: json['surname'] as String,
         photoUrl: json['photoUrl'] as String,
@@ -25,6 +27,7 @@ class UserModel {
         online: json['online'] as bool,
         lastEnteredToApp: json['lastEnteredToApp'] as String,
         bio: json['bio'] as String,
+        id: json['id'] as String,
       );
 
   Map<String, dynamic> toJson() => {
@@ -35,5 +38,6 @@ class UserModel {
         'online': online,
         'lastEnteredToApp': lastEnteredToApp,
         'bio': bio,
+        'id': id,
       };
 }

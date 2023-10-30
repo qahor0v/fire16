@@ -53,7 +53,7 @@ class CheckUser extends StatelessWidget {
           if (snapshot.data == null) {
             return const SignUpPage();
           } else {
-            return const UserInfoPage();
+            return const HomePage();
           }
         }
       },
