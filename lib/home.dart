@@ -4,6 +4,8 @@ import 'package:fire16/user_model.dart';
 import 'package:flutter/material.dart';
 
 class HomePage extends StatelessWidget {
+  static const String id = "home";
+
   const HomePage({super.key});
 
   @override
@@ -74,3 +76,48 @@ class HomePage extends StatelessWidget {
     );
   }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
