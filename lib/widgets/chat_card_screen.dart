@@ -13,7 +13,7 @@ class HomeChatCard extends StatelessWidget {
       padding: const EdgeInsets.only(top: 8),
       child: ListTile(
         onTap: () {
-          Go(context).go(const OpenChatPage());
+         // Go(context).go(  OpenChatPage());
         },
         leading: Container(
           height: 60,

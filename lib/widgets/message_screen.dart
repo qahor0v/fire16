@@ -1,15 +1,20 @@
+import 'package:fire16/models/message_model.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 class MessageScreen extends StatelessWidget {
-  final bool byMe;
+  final Message message;
+  final String myID;
 
   const MessageScreen({
     super.key,
-    required this.byMe,
+    required this.message,
+    required this.myID,
   });
 
   @override
   Widget build(BuildContext context) {
+    final byMe = message.senderID == myID;
     return Container(
       margin: EdgeInsets.only(
         left: byMe ? 80 : 16,
@@ -19,18 +24,22 @@ class MessageScreen extends StatelessWidget {
       ),
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
-          color: byMe ? Colors.green.shade100 : Colors.blue.shade100,
-          borderRadius: BorderRadius.only(
-            topLeft: const Radius.circular(16),
-            topRight: const Radius.circular(16),
-            bottomLeft: byMe ? const Radius.circular(16) : Radius.zero,
-            bottomRight: !byMe ? const Radius.circular(16) : Radius.zero,
-          )),
+        color: byMe ? Colors.green.shade100 : Colors.blue.shade100,
+        borderRadius: BorderRadius.only(
+          topLeft: const Radius.circular(16),
+          topRight: const Radius.circular(16),
+          bottomLeft: byMe ? const Radius.circular(16) : Radius.zero,
+          bottomRight: !byMe ? const Radius.circular(16) : Radius.zero,
+        ),
+      ),
       child: Column(
+        mainAxisSize: MainAxisSize.min,
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text(
-            "dofjdojfd fkdfjdofjodf dfodjfodjfodf dofjdofjdofj dfojdfojdf dfodjfodjfodjf fdodjfodjfodjf ndfodjofjdnfdfojdofjdojfd 0odfjdofdofjo",
-            style: TextStyle(
+          Text(
+            message.text,
+            style: const TextStyle(
               color: Colors.black,
               fontSize: 13,
               fontWeight: FontWeight.w400,
@@ -41,9 +50,11 @@ class MessageScreen extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
-              const Text(
-                "18:03",
-                style: TextStyle(
+              Text(
+                DateFormat('hh:mm').format(
+                  DateTime.parse(message.sendTime),
+                ),
+                style: const TextStyle(
                   color: Colors.grey,
                 ),
               ),

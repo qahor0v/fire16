@@ -37,4 +37,30 @@ class RealDatabaseServices {
     DatabaseReference ref = database.ref('users');
     await ref.child('/$id').remove();
   }
+
+  Future<UserModel?> searchUser(String username) async {
+    UserModel? findUser;
+    DatabaseReference ref = database.ref('users');
+    try {
+      DataSnapshot event = await ref.get();
+      var map = event.value as Map;
+      map.forEach((key, value) {
+        UserModel? model;
+        try {
+          model = UserModel.fromJson(value);
+        } catch (error) {
+          log("Parsing  error: ", error: error);
+        }
+        if (model != null) {
+          if (model.username == username) {
+            findUser = model;
+          }
+        }
+      });
+    } catch (error) {
+      log("Searching error: ", error: error);
+      return null;
+    }
+    return findUser;
+  }
 }

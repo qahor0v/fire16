@@ -1,15 +1,48 @@
-import 'package:fire16/widgets/app_text_field.dart';
+import 'package:fire16/models/chat_model.dart';
+import 'package:fire16/models/message_model.dart';
+import 'package:fire16/models/user_model.dart';
+import 'package:fire16/utils/app_id_generator.dart';
 import 'package:fire16/widgets/message_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 class OpenChatPage extends StatefulWidget {
-  const OpenChatPage({super.key});
+  final UserModel userModel;
+  final ChatModel? chatModel;
+
+  const OpenChatPage({
+    super.key,
+    required this.userModel,
+    this.chatModel,
+  });
 
   @override
   State<OpenChatPage> createState() => _OpenChatPageState();
 }
 
 class _OpenChatPageState extends State<OpenChatPage> {
+  String myID = '1';
+  List<Message> allMessages = [];
+  final messageController = TextEditingController();
+
+  void sendMessage() {
+    if (messageController.text.trim().isNotEmpty) {
+      Message message = Message(
+        id: Token.id(),
+        senderID: myID,
+        text: messageController.text.trim(),
+        file: '',
+        image: '',
+        readed: false,
+        sendTime: Token.now(),
+      );
+      setState(() {
+        allMessages.add(message);
+        messageController.clear();
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -25,9 +58,9 @@ class _OpenChatPageState extends State<OpenChatPage> {
               decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(80),
                   border: Border.all(color: Colors.white70),
-                  image: const DecorationImage(
+                  image: DecorationImage(
                     image: NetworkImage(
-                      "https://firebasestorage.googleapis.com/v0/b/firelesson16.appspot.com/o/movies%2F1000000029.jpg?alt=media&token=8e457cd3-5d42-4e44-a909-5dcc658492f0",
+                      widget.userModel.photoUrl,
                     ),
                     fit: BoxFit.cover,
                   )),
@@ -38,21 +71,25 @@ class _OpenChatPageState extends State<OpenChatPage> {
               ),
             ),
             const SizedBox(width: 8),
-            const Column(
+            Column(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  "Nuriddinov Ruhiddin",
-                  style: TextStyle(
+                  "${widget.userModel.name} ${widget.userModel.surname}",
+                  style: const TextStyle(
                     fontSize: 14,
                     fontWeight: FontWeight.w600,
                     color: Colors.white,
                   ),
                 ),
                 Text(
-                  "Online",
-                  style: TextStyle(
+                  widget.userModel.online
+                      ? "Online"
+                      : DateFormat("hh:mm").format(
+                          DateTime.parse(widget.userModel.lastEnteredToApp),
+                        ),
+                  style: const TextStyle(
                     fontSize: 12,
                     fontWeight: FontWeight.w400,
                     color: Colors.white70,
@@ -69,22 +106,42 @@ class _OpenChatPageState extends State<OpenChatPage> {
           ),
         ],
       ),
-      floatingActionButton: SizedBox(
-        height: 60,
-        child: AppTextField(
-          hint: 'Message text',
-          controller: TextEditingController(),
-        ),
-      ),
-      body: ListView.builder(
-        itemCount: 23,
-        itemBuilder: (context, index) {
-          return MessageScreen(
-            byMe: index % 2 == 0,
-          );
-        },
+      body: Column(
+        children: [
+          Expanded(
+            child: ListView.builder(
+              itemCount: allMessages.length,
+              itemBuilder: (context, index) {
+                return MessageScreen(
+                  message: allMessages[index],
+                  myID: myID,
+                );
+              },
+            ),
+          ),
+          Container(
+            padding: const EdgeInsets.only(
+              left: 16,
+              right: 16,
+            ),
+            decoration: const BoxDecoration(color: Colors.white),
+            height: 60,
+            child: Center(
+              child: TextField(
+                controller: messageController,
+                decoration: InputDecoration(
+                  border: InputBorder.none,
+                  hintText: "Enter message",
+                  suffixIcon: IconButton(
+                    icon: const Icon(Icons.send),
+                    onPressed: sendMessage,
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }
 }
-
